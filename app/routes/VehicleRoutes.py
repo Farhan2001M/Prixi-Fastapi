@@ -838,16 +838,6 @@ async def get_user_data_summary(current_user: str = Depends(get_current_user)):
     }
 
 
-
-
-
-
-
-
-
-
-
-
 @router.get("/brand-visits-chart", tags=["Charts"])
 async def get_brand_visits_chart(current_user: str = Depends(get_current_user)):
     if not current_user:
