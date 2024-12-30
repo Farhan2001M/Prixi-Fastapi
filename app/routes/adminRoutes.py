@@ -192,32 +192,41 @@ async def add_vehicle_brand(brand: Brand):
     return {"message": "Brand added successfully."}
 
 
-@router.post("/addVehiclemodel")
-async def add_vehicle_model(brand_name: str, model: VehicleModel, images: List[UploadFile] = File(...)):
-    # Find the brand in the database
-    brand = await Vehiclecollection.find_one({"brandName": brand_name})
-    if not brand:
-        raise HTTPException(status_code=404, detail="Brand not found.")
-    # Create the model dictionary
-    model_dict = model.dict()
-    # Encode images to base64
-    if images:
-        encoded_images = []
-        for image in images:
-            contents = await image.read()
-            encoded_image = base64.b64encode(contents).decode('utf-8')
-            encoded_images.append({
-                "filename": image.filename,
-                "content": encoded_image
-            })
-        model_dict["images"] = encoded_images  # Store images in the model dict
-    # Append the new model to the brand's models array
-    if "models" not in brand:
-        brand["models"] = []    
-    brand["models"].append(model_dict)
-    # Update the brand document in the database
-    await Vehiclecollection.update_one({"brandName": brand_name}, {"$set": brand})
-    return {"message": "Model added successfully."}
+
+
+
+
+
+
+
+
+
+# @router.post("/addVehiclemodel")
+# async def add_vehicle_model(brand_name: str, model: VehicleModel, images: List[UploadFile] = File(...)):
+#     # Find the brand in the database
+#     brand = await Vehiclecollection.find_one({"brandName": brand_name})
+#     if not brand:
+#         raise HTTPException(status_code=404, detail="Brand not found.")
+#     # Create the model dictionary
+#     model_dict = model.dict()
+#     # Encode images to base64
+#     if images:
+#         encoded_images = []
+#         for image in images:
+#             contents = await image.read()
+#             encoded_image = base64.b64encode(contents).decode('utf-8')
+#             encoded_images.append({
+#                 "filename": image.filename,
+#                 "content": encoded_image
+#             })
+#         model_dict["images"] = encoded_images  # Store images in the model dict
+#     # Append the new model to the brand's models array
+#     if "models" not in brand:
+#         brand["models"] = []    
+#     brand["models"].append(model_dict)
+#     # Update the brand document in the database
+#     await Vehiclecollection.update_one({"brandName": brand_name}, {"$set": brand})
+#     return {"message": "Model added successfully."}
 
 
 
