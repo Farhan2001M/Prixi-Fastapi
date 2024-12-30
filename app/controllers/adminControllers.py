@@ -4,7 +4,6 @@ from ..config.admindatabase import adminlogininfo
 # from ..models.adminmodel import User 
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import jwt
 
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
