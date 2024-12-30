@@ -20,7 +20,6 @@ class CarInput(BaseModel):
     miles: int
     trim: str
 
-
 @router.post("/pricepredict", tags=["Price prediction"])
 async def predict_price(input_data: CarInput, current_user: str = Depends(get_current_user)):
     # Check if the user is authenticated
