@@ -1,12 +1,9 @@
 from fastapi import APIRouter 
-from ..controllers.userSignupControllers import get_current_user
 from fastapi import Depends
-from ..config.usersdatabase import signupcollectioninfo 
 from fastapi import HTTPException
 from fastapi import UploadFile, File 
 import base64
 from pydantic import BaseModel
-from ..controllers.userSignupControllers import get_user_by_email 
 from typing import List
 from typing import Dict, Tuple
 from datetime import datetime, timedelta
@@ -14,10 +11,12 @@ import random
 import smtplib
 from fastapi import status
 from email.message import EmailMessage
-from ..models.usersmodel import ForgotPasswordRequest , ValidateOTPRequest , PasswordChangeRequest
 import bcrypt
-from ..models.usersmodel import LoginResponse , UserDetailsResponse , UpdateUserRequest , User
-from ..controllers.userSignupControllers import verify_user , create_user , generate_initials_image
+
+from ..models.usersmodel import LoginResponse , UserDetailsResponse , UpdateUserRequest , User , ForgotPasswordRequest , ValidateOTPRequest , PasswordChangeRequest
+from ..config.usersdatabase import signupcollectioninfo 
+
+# from ..controllers.userSignupControllers import verify_user , create_user , generate_initials_image, get_current_user,  get_user_by_email 
 
 
 
@@ -26,9 +25,9 @@ from ..controllers.userSignupControllers import verify_user , create_user , gene
 router = APIRouter()
 
 
-# @router.get('/')
-# async def home():
-#     return {'msg': 'Welcome in my Signup Routes '} 
+@router.get('/')
+async def home():
+    return {'msg': 'Welcome in my Signup Routes '} 
 
 
 
