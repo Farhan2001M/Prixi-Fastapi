@@ -5,5 +5,5 @@ pydantic
 motor
 python-jose
 pillow
-bson
+pymongo
 python-multipart
