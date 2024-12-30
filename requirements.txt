@@ -4,3 +4,4 @@ bcrypt
 pydantic
 motor
 python-jose
+pillow
