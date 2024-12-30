@@ -7,3 +7,6 @@ python-jose
 pillow
 pymongo
 python-multipart
+scikit-learn
+numpy
+gensim
