@@ -9,4 +9,4 @@ pymongo
 python-multipart
 numpy
 # gensim
-# scikit-learn
+scikit-learn
