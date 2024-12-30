@@ -14,6 +14,7 @@ origins = ["http://localhost:3000",
            "https://localhost:3000",
            "http://localhost:3001",
            "https://localhost:3001",
+           "https://prixi-admin.vercel.app"  # Add the Vercel frontend URL
           ]
 
 app.add_middleware(

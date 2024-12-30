@@ -35,6 +35,8 @@ async def save_vehicle_data(request: VehicleRequest):
     await collection.insert_one(new_brand_document)
     return {"message": "Brand and models saved successfully", "brand_id": new_id}
 
+
+
 @router.get("/get-car-brands")
 async def get_car_brands():
     # Fetch only the `brandName` field from the Vehicles collection

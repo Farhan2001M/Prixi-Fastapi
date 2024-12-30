@@ -171,10 +171,12 @@ async def add_vehicle_brand(brand: Brand):
     return {"message": "Brand added successfully."}
 
 
+
 # Helper function to serialize the MongoDB documents 
 def serialize_vehicle(vehicle: Dict[str, Any]) -> Dict[str, Any]:
     vehicle["_id"] = str(vehicle["_id"])  # Convert ObjectId to string
     return vehicle
+
 
 @router.get("/vehicles", response_model=List[Dict[str, Any]])
 async def get_vehicles():
