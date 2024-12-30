@@ -21,37 +21,68 @@ logging.basicConfig(level=logging.INFO)  # You can change to DEBUG, ERROR, etc.,
 logger = logging.getLogger(__name__)
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"}, )
-    try:
-        # Decode the JWT token
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])        
-        email: str = payload.get("sub")
-        # If email is not found, raise an exception
-        if email is None:
-            logger.error("Failed to extract email from the token")
-            raise credentials_exception
-        # Log success if email is found
-        logger.info(f"Successfully authenticated user: {email}")
-        return email
-    except JWTError as e:
-        # Log the exception if there is an error decoding the token
-        logger.error(f"JWT Error: {str(e)} - Could not validate credentials")
-        raise credentials_exception
 
 
-async def get_user_by_email(email: str) -> Optional[dict]:
-    user = await signupcollectioninfo.find_one({"email": email})
-    if user:
-        # Remove the password field from the user data
-        user_data = {key: value for key, value in user.items() if key != 'password'}
-        return user_data    
-    return None
+
+
+
+
+
+
+
+
+
+
+
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# async def get_current_user(token: str = Depends(oauth2_scheme)):
+#     credentials_exception = HTTPException(
+#         status_code=status.HTTP_401_UNAUTHORIZED,
+#         detail="Could not validate credentials",
+#         headers={"WWW-Authenticate": "Bearer"}, )
+#     try:
+#         # Decode the JWT token
+#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])        
+#         email: str = payload.get("sub")
+#         # If email is not found, raise an exception
+#         if email is None:
+#             logger.error("Failed to extract email from the token")
+#             raise credentials_exception
+#         # Log success if email is found
+#         logger.info(f"Successfully authenticated user: {email}")
+#         return email
+#     except JWTError as e:
+#         # Log the exception if there is an error decoding the token
+#         logger.error(f"JWT Error: {str(e)} - Could not validate credentials")
+#         raise credentials_exception
+
+
+# async def get_user_by_email(email: str) -> Optional[dict]:
+#     user = await signupcollectioninfo.find_one({"email": email})
+#     if user:
+#         # Remove the password field from the user data
+#         user_data = {key: value for key, value in user.items() if key != 'password'}
+#         return user_data    
+#     return None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
