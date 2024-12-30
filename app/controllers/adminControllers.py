@@ -69,6 +69,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 #     return verify_access_token(token, credentials_exception)
 
 
+
 def serialize_dict(document):
     # Convert MongoDB document to a serializable dictionary, excluding the password.
     if document is None:
