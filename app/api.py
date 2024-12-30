@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routes.adminRoutes import router as admin_router
+from .routes.userSignupRoutes import router as signup_router
 
 app = FastAPI()
 
@@ -20,6 +21,8 @@ app.add_middleware(
 )
 
 app.include_router(admin_router)
+app.include_router(signup_router)
+
 
 
 @app.get("/")
