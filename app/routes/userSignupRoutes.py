@@ -22,28 +22,6 @@ router = APIRouter()
 
 
 
-# MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
-
-# @router.post("/upload-image", tags=["Profile Update"])
-# async def upload_image(image: UploadFile = File(...), current_user: str = Depends(get_current_user)):
-#     # Read the image file
-#     contents = await image.read()
-#     # Check if the file size exceeds the limit
-#     if len(contents) > MAX_FILE_SIZE:
-#         raise HTTPException(status_code=400, detail="File size exceeds the 2MB limit")
-#     # Encode the image in base64
-#     encoded_image = base64.b64encode(contents).decode('utf-8')
-#     # Update the user document with the base64 image
-#     result = await signupcollectioninfo.update_one(
-#         {"email": current_user},
-#         {"$set": {"image": encoded_image}}
-#     )
-#     if result.matched_count == 0:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return {"message": "Image uploaded successfully"}
-
-
-
 
 @router.get('/')
 async def home():
@@ -96,6 +74,22 @@ async def delete_user(current_user: str = Depends(get_current_user)):
     except Exception as e:
         # Catch other exceptions and provide a generic error message
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
+
+
+@router.post("/upload-image" , tags=["Profile Update"])
+async def upload_image(image: UploadFile = File(...), current_user: str = Depends(get_current_user)):
+    # Read the image file
+    contents = await image.read()
+    # Encode the image in base64
+    encoded_image = base64.b64encode(contents).decode('utf-8')
+    # Update the user document with the base64 image
+    result = await signupcollectioninfo.update_one(
+        {"email": current_user},
+        {"$set": {"image": encoded_image}} )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "Image uploaded successfully"}
 
 
 
@@ -299,42 +293,5 @@ async def remove_image(current_user: str = Depends(get_current_user)):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@router.post("/upload-image" , tags=["Profile Update"])
-async def upload_image(image: UploadFile = File(...), current_user: str = Depends(get_current_user)):
-    # Read the image file
-    contents = await image.read()
-    # Encode the image in base64
-    encoded_image = base64.b64encode(contents).decode('utf-8')
-    # Update the user document with the base64 image
-    result = await signupcollectioninfo.update_one(
-        {"email": current_user},
-        {"$set": {"image": encoded_image}} )
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"message": "Image uploaded successfully"}
 
 
