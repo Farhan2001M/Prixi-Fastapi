@@ -16,7 +16,6 @@ signupcollectioninfo = db.Userinfo
 
 
 
-
 # import motor.motor_asyncio
 
 # # MongoDB Atlas connection string

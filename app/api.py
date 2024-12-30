@@ -7,7 +7,6 @@ from .routes.VehicleRoutes import router as vehicle_router
 from .routes.recommendationRoutes import router as recommendation
 from .routes.predictionRoutes import router as prediction
 
-
 app = FastAPI()
 
 origins = ["http://localhost:3000",
@@ -24,6 +23,8 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers = ["*"],
 )
+
+
 
 app.include_router(admin_router)
 app.include_router(signup_router)
