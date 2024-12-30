@@ -11,14 +11,14 @@ import bcrypt
 
 
 
-SECRET_KEY = "Extremely9Sensitive9Super5Secret6Key3"  
-ALGORITHM = "HS256" 
-ACCESS_TOKEN_EXPIRE_MINUTES = 100
+# SECRET_KEY = "Extremely9Sensitive9Super5Secret6Key3"  
+# ALGORITHM = "HS256" 
+# ACCESS_TOKEN_EXPIRE_MINUTES = 100
 
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)  # You can change to DEBUG, ERROR, etc., depending on your needs
-logger = logging.getLogger(__name__)
+# # Set up logging
+# logging.basicConfig(level=logging.INFO)  # You can change to DEBUG, ERROR, etc., depending on your needs
+# logger = logging.getLogger(__name__)
 
 
 
