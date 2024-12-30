@@ -113,56 +113,79 @@ async def upload_image(image: UploadFile = File(...), current_user: str = Depend
 
 
 
-class UpdateSearchRequest(BaseModel):
-    searchTerm: str  # The term the user is searching for
-
-@router.get("/getsearchhistory", response_model=List[str], tags=["Search History"])
-async def get_search_history(current_user: str = Depends(get_current_user)):
-    user = await get_user_by_email(current_user)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user.get("searches", [])  # Return user's search history (up to 3 searches)
-
-@router.post("/updatesearchhistory", tags=["Search History"])
-async def update_search_history(update_data: UpdateSearchRequest, current_user: str = Depends(get_current_user)):
-    user = await get_user_by_email(current_user)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    # Get current searches
-    current_searches = user.get("searches", [])
-    # Add the new search term, if not already in the list
-    new_search = update_data.searchTerm
-    # Remove the search if it's already in the list to avoid duplicates
-    current_searches = [search for search in current_searches if search != new_search]
-    # Add the new search term to the beginning of the list
-    current_searches.insert(0, new_search)
-    # Limit the search history to 3 entries
-    updated_searches = current_searches[:3]
-    # Update the user's search history
-    result = await signupcollectioninfo.update_one(
-        {"email": current_user},
-        {"$set": {"searches": updated_searches}} )
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="User not found.")   
-    return {"message": "Search history updated successfully", "searches": updated_searches}
 
 
-@router.delete("/removesearchhistory/{search_term}", tags=["Search History"])
-async def remove_search_history(search_term: str, current_user: str = Depends(get_current_user)):
-    user = await get_user_by_email(current_user)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    # Get current searches
-    current_searches = user.get("searches", [])
-    # Remove the specified search term
-    updated_searches = [search for search in current_searches if search != search_term]
-    # Update the user's search history in the database
-    result = await signupcollectioninfo.update_one(
-        {"email": current_user},
-        {"$set": {"searches": updated_searches}} )
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="User not found.")
-    return {"message": "Search history updated successfully", "searches": updated_searches}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class UpdateSearchRequest(BaseModel):
+#     searchTerm: str  # The term the user is searching for
+
+# @router.get("/getsearchhistory", response_model=List[str], tags=["Search History"])
+# async def get_search_history(current_user: str = Depends(get_current_user)):
+#     user = await get_user_by_email(current_user)
+#     if user is None:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     return user.get("searches", [])  # Return user's search history (up to 3 searches)
+
+# @router.post("/updatesearchhistory", tags=["Search History"])
+# async def update_search_history(update_data: UpdateSearchRequest, current_user: str = Depends(get_current_user)):
+#     user = await get_user_by_email(current_user)
+#     if user is None:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     # Get current searches
+#     current_searches = user.get("searches", [])
+#     # Add the new search term, if not already in the list
+#     new_search = update_data.searchTerm
+#     # Remove the search if it's already in the list to avoid duplicates
+#     current_searches = [search for search in current_searches if search != new_search]
+#     # Add the new search term to the beginning of the list
+#     current_searches.insert(0, new_search)
+#     # Limit the search history to 3 entries
+#     updated_searches = current_searches[:3]
+#     # Update the user's search history
+#     result = await signupcollectioninfo.update_one(
+#         {"email": current_user},
+#         {"$set": {"searches": updated_searches}} )
+#     if result.matched_count == 0:
+#         raise HTTPException(status_code=404, detail="User not found.")   
+#     return {"message": "Search history updated successfully", "searches": updated_searches}
+
+
+# @router.delete("/removesearchhistory/{search_term}", tags=["Search History"])
+# async def remove_search_history(search_term: str, current_user: str = Depends(get_current_user)):
+#     user = await get_user_by_email(current_user)
+#     if user is None:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     # Get current searches
+#     current_searches = user.get("searches", [])
+#     # Remove the specified search term
+#     updated_searches = [search for search in current_searches if search != search_term]
+#     # Update the user's search history in the database
+#     result = await signupcollectioninfo.update_one(
+#         {"email": current_user},
+#         {"$set": {"searches": updated_searches}} )
+#     if result.matched_count == 0:
+#         raise HTTPException(status_code=404, detail="User not found.")
+#     return {"message": "Search history updated successfully", "searches": updated_searches}
 
 
 
