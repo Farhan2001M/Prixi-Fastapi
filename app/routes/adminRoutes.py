@@ -245,29 +245,29 @@ async def add_vehicle_brand(brand: Brand):
 
 
 
-# # Helper function to serialize the MongoDB documents 
-# def serialize_vehicle(vehicle: Dict[str, Any]) -> Dict[str, Any]:
-#     vehicle["_id"] = str(vehicle["_id"])  # Convert ObjectId to string
-#     return vehicle
+# Helper function to serialize the MongoDB documents 
+def serialize_vehicle(vehicle: Dict[str, Any]) -> Dict[str, Any]:
+    vehicle["_id"] = str(vehicle["_id"])  # Convert ObjectId to string
+    return vehicle
 
-# @router.get("/vehicles", response_model=List[Dict[str, Any]])
-# async def get_vehicles():
-#     vehicles_cursor = Vehiclecollection.find()  # Get a cursor for all documents
-#     vehicles = await vehicles_cursor.to_list(length=None)  # Fetch all documents into a list
-#     return [serialize_vehicle(vehicle) for vehicle in vehicles]
+@router.get("/vehicles", response_model=List[Dict[str, Any]])
+async def get_vehicles():
+    vehicles_cursor = Vehiclecollection.find()  # Get a cursor for all documents
+    vehicles = await vehicles_cursor.to_list(length=None)  # Fetch all documents into a list
+    return [serialize_vehicle(vehicle) for vehicle in vehicles]
 
 
-# @router.get("/getBrandData/{brand_name}", response_model=Optional[BrandModel])
-# async def get_vehicle_brand(brand_name: str):
-#     brand_data = await Vehiclecollection.find_one({"brandName": brand_name})
-#     if brand_data is None:
-#         raise HTTPException(status_code=404, detail="Brand not found")
-#     # Convert ObjectId to string for JSON serialization
-#     brand_data["_id"] = str(brand_data["_id"])
-#     # Ensure models is a valid list
-#     if "models" not in brand_data:
-#         brand_data["models"] = []
-#     return brand_data
+@router.get("/getBrandData/{brand_name}", response_model=Optional[BrandModel])
+async def get_vehicle_brand(brand_name: str):
+    brand_data = await Vehiclecollection.find_one({"brandName": brand_name})
+    if brand_data is None:
+        raise HTTPException(status_code=404, detail="Brand not found")
+    # Convert ObjectId to string for JSON serialization
+    brand_data["_id"] = str(brand_data["_id"])
+    # Ensure models is a valid list
+    if "models" not in brand_data:
+        brand_data["models"] = []
+    return brand_data
 
 
 
