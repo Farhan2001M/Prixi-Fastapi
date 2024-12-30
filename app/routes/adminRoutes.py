@@ -2,7 +2,7 @@ from ..models.adminmodel import LoginResponse , ForgotPasswordRequest , Validate
 from ..controllers.adminControllers import get_current_user, verify_admin
 from ..config.admindatabase import adminlogininfo , VehicleData , Vehiclecollection
 
-
+import logging
 import bcrypt
 import random
 import smtplib
@@ -22,7 +22,7 @@ router = APIRouter()
 async def home():
     return {'msg': 'Welcome in my Admin Routes '} 
 
-
+logging.basicConfig(level=logging.INFO)
 
 
 @router.post("/adminlogin", response_model=LoginResponse, tags=["Admin"])
@@ -177,14 +177,18 @@ def serialize_vehicle(vehicle: Dict[str, Any]) -> Dict[str, Any]:
     vehicle["_id"] = str(vehicle["_id"])  # Convert ObjectId to string
     return vehicle
 
-
 @router.get("/vehicles", response_model=List[Dict[str, Any]])
 async def get_vehicles():
-    vehicles_cursor = Vehiclecollection.find()  # Get a cursor for all documents
-    vehicles = await vehicles_cursor.to_list(length=None)  # Fetch all documents into a list
-    return [serialize_vehicle(vehicle) for vehicle in vehicles]
-
-
+    try:
+        logging.info("Fetching vehicles...")
+        vehicles_cursor = Vehiclecollection.find()
+        vehicles = await vehicles_cursor.to_list(length=None)
+        logging.info(f"Fetched {len(vehicles)} vehicles.")
+        return [serialize_vehicle(vehicle) for vehicle in vehicles]
+    except Exception as e:
+        logging.error(f"Error fetching vehicles: {e}")
+        raise e
+    
 @router.get("/getBrandData/{brand_name}", response_model=Optional[BrandModel])
 async def get_vehicle_brand(brand_name: str):
     brand_data = await Vehiclecollection.find_one({"brandName": brand_name})
