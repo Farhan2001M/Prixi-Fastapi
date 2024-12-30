@@ -34,31 +34,31 @@ router = APIRouter()
 
 
 
-@router.get("/user-image", tags=["Profile Update"])
-async def get_user_image(current_user: str = Depends(get_current_user)):
-    user = await signupcollectioninfo.find_one({"email": current_user}, {"firstName": 1, "lastName": 1, "image": 1})
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    # Retrieve the custom image if it exists; otherwise, provide GenImage
-    custom_image = user.get("image", None)
-    gen_image = user.get("GenImage") or generate_initials_image(user["firstName"], user["lastName"])
-    return {"image": custom_image, "GenImage": gen_image, "imageType": "png"}
+# @router.get("/user-image", tags=["Profile Update"])
+# async def get_user_image(current_user: str = Depends(get_current_user)):
+#     user = await signupcollectioninfo.find_one({"email": current_user}, {"firstName": 1, "lastName": 1, "image": 1})
+#     if user is None:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     # Retrieve the custom image if it exists; otherwise, provide GenImage
+#     custom_image = user.get("image", None)
+#     gen_image = user.get("GenImage") or generate_initials_image(user["firstName"], user["lastName"])
+#     return {"image": custom_image, "GenImage": gen_image, "imageType": "png"}
 
 
-@router.post("/signup", tags=["User"])
-async def signup_user(user: User):
-    res = await create_user(user)
-    if res:
-        return {"message": "User successfully signed up", "user": res}
-    if res == None:
-        return {"message": "This email is already registered with us."}
-    raise HTTPException(400, "Something went wrong")
+# @router.post("/signup", tags=["User"])
+# async def signup_user(user: User):
+#     res = await create_user(user)
+#     if res:
+#         return {"message": "User successfully signed up", "user": res}
+#     if res == None:
+#         return {"message": "This email is already registered with us."}
+#     raise HTTPException(400, "Something went wrong")
 
 
 
-@router.get("/profileinfo" , tags=["General"])
-async def protected_endpoint(current_user: str = Depends(get_current_user)):
-    return {"message": "This is a protected endpoint", "user": current_user}
+# @router.get("/profileinfo" , tags=["General"])
+# async def protected_endpoint(current_user: str = Depends(get_current_user)):
+#     return {"message": "This is a protected endpoint", "user": current_user}
 
 
 
