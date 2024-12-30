@@ -136,114 +136,6 @@ async def remove_search_history(search_term: str, current_user: str = Depends(ge
     return {"message": "Search history updated successfully", "searches": updated_searches}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# @router.post("/upload-image" , tags=["Profile Update"])
-# async def upload_image(image: UploadFile = File(...), current_user: str = Depends(get_current_user)):
-#     # Read the image file
-#     contents = await image.read()
-#     # Encode the image in base64
-#     encoded_image = base64.b64encode(contents).decode('utf-8')
-#     # Update the user document with the base64 image
-#     result = await signupcollectioninfo.update_one(
-#         {"email": current_user},
-#         {"$set": {"image": encoded_image}} )
-#     if result.matched_count == 0:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return {"message": "Image uploaded successfully"}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 otp_storage: Dict[str, Tuple[str, datetime]] = {}
 
 @router.post("/forgot-password", tags=["User"])
@@ -353,102 +245,115 @@ async def change_password(request: PasswordChangeRequest):
 
 
 
-# @router.get("/getfulluserinfo", response_model=UserDetailsResponse , tags=["Profile Update"])
-# async def get_full_user_info(current_user: str = Depends(get_current_user)):
-#     user = await get_user_by_email(current_user)
-#     if user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return user
+@router.get("/getfulluserinfo", response_model=UserDetailsResponse , tags=["Profile Update"])
+async def get_full_user_info(current_user: str = Depends(get_current_user)):
+    user = await get_user_by_email(current_user)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 
-# @router.post("/updateuser" , tags=["Profile Update"])
-# async def update_user_details( update_data: UpdateUserRequest, current_user: str = Depends(get_current_user) ):
-#     update_fields = {key: value for key, value in update_data.dict().items() if value is not None}
-#     if not update_fields:
-#         raise HTTPException(status_code=400, detail="No update fields provided.")
-#     result = await signupcollectioninfo.update_one(
-#         {"email": current_user},  # Assuming email is used to identify the user
-#         {"$set": update_fields} )
-#     if result.matched_count == 0:
-#         raise HTTPException(status_code=404, detail="User not found.")
-#     return {"message": "User details updated successfully"}
+@router.post("/updateuser" , tags=["Profile Update"])
+async def update_user_details( update_data: UpdateUserRequest, current_user: str = Depends(get_current_user) ):
+    update_fields = {key: value for key, value in update_data.dict().items() if value is not None}
+    if not update_fields:
+        raise HTTPException(status_code=400, detail="No update fields provided.")
+    result = await signupcollectioninfo.update_one(
+        {"email": current_user},  # Assuming email is used to identify the user
+        {"$set": update_fields} )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return {"message": "User details updated successfully"}
 
-# @router.post("/login", response_model=LoginResponse, tags=["User"])
-# async def login_user(email: str, password: str):
-#     result = await verify_user(email, password)    
-#     # Handle the different failure cases by raising HTTP exceptions
-#     if result == "email_not_registered":
-#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email not registered.")
-#     if result == "invalid_password":
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password.")
-#     return result    
+@router.post("/login", response_model=LoginResponse, tags=["User"])
+async def login_user(email: str, password: str):
+    result = await verify_user(email, password)    
+    # Handle the different failure cases by raising HTTP exceptions
+    if result == "email_not_registered":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email not registered.")
+    if result == "invalid_password":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password.")
+    return result    
 
 
-# @router.post("/remove-image", tags=["Profile Update"])
-# async def remove_image(current_user: str = Depends(get_current_user)):
-#     # Remove the custom image field from the user's document
+@router.post("/remove-image", tags=["Profile Update"])
+async def remove_image(current_user: str = Depends(get_current_user)):
+    # Remove the custom image field from the user's document
+    result = await signupcollectioninfo.update_one(
+        {"email": current_user},
+        {"$unset": {"image": ""}}
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found or image not removed")
+    # Fetch the stored initials image (`GenImage`) for this user
+    user = await signupcollectioninfo.find_one({"email": current_user}, {"GenImage": 1})
+    if user is None or "GenImage" not in user:
+        raise HTTPException(status_code=404, detail="Initials image not found for this user")
+    # Return the success message and the stored initials image
+    return {"message": "Image removed successfully", "GenImage": user["GenImage"]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # from_email = 'prixihelpcentre@gmail.com'
+    # from_password = "jgtn fvsj ymuc wzje"  # Use environment variable for the password
+    # from_email = 'prixihelpcentre@gmail.com'
+    # from_password = "jgtn fvsj ymuc wzje"  # Use environment variable for the password
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# @router.post("/upload-image" , tags=["Profile Update"])
+# async def upload_image(image: UploadFile = File(...), current_user: str = Depends(get_current_user)):
+#     # Read the image file
+#     contents = await image.read()
+#     # Encode the image in base64
+#     encoded_image = base64.b64encode(contents).decode('utf-8')
+#     # Update the user document with the base64 image
 #     result = await signupcollectioninfo.update_one(
 #         {"email": current_user},
-#         {"$unset": {"image": ""}}
-#     )
-#     if result.modified_count == 0:
-#         raise HTTPException(status_code=404, detail="User not found or image not removed")
-#     # Fetch the stored initials image (`GenImage`) for this user
-#     user = await signupcollectioninfo.find_one({"email": current_user}, {"GenImage": 1})
-#     if user is None or "GenImage" not in user:
-#         raise HTTPException(status_code=404, detail="Initials image not found for this user")
-#     # Return the success message and the stored initials image
-#     return {"message": "Image removed successfully", "GenImage": user["GenImage"]}
+#         {"$set": {"image": encoded_image}} )
+#     if result.matched_count == 0:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     return {"message": "Image uploaded successfully"}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # from_email = 'prixihelpcentre@gmail.com'
-    # from_password = "jgtn fvsj ymuc wzje"  # Use environment variable for the password
-    # from_email = 'prixihelpcentre@gmail.com'
-    # from_password = "jgtn fvsj ymuc wzje"  # Use environment variable for the password
