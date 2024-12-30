@@ -287,72 +287,72 @@ async def get_vehicle_brand(brand_name: str):
 
 
 
-# @router.post("/vehicles/{brand_name}/add-model")
-# async def add_new_model(
-#     brand_name: str,
-#     modelName: str = Form(...),
-#     vehicleType: str = Form(...),
-#     engineType: str = Form(...),
-#     description: str = Form(...),
-#     torque: int = Form(...),
-#     year: int = Form(...),
-#     launchPrice: int = Form(...),
-#     horsepower: int = Form(...),
-#     seatingCapacity: int = Form(...),
-#     variants: List[str] = Form(...),
-#     colors: List[str] = Form(...),
-#     images: List[UploadFile] = File(...),
-# ):
-#     # Step 1: Check if brand exists
-#     brand_document = await Vehiclecollection.find_one({"brandName": brand_name})
-#     if not brand_document:
-#         raise HTTPException(status_code=404, detail="Brand not found.")
+@router.post("/vehicles/{brand_name}/add-model")
+async def add_new_model(
+    brand_name: str,
+    modelName: str = Form(...),
+    vehicleType: str = Form(...),
+    engineType: str = Form(...),
+    description: str = Form(...),
+    torque: int = Form(...),
+    year: int = Form(...),
+    launchPrice: int = Form(...),
+    horsepower: int = Form(...),
+    seatingCapacity: int = Form(...),
+    variants: List[str] = Form(...),
+    colors: List[str] = Form(...),
+    images: List[UploadFile] = File(...),
+):
+    # Step 1: Check if brand exists
+    brand_document = await Vehiclecollection.find_one({"brandName": brand_name})
+    if not brand_document:
+        raise HTTPException(status_code=404, detail="Brand not found.")
 
-#     # Step 2: Check if model already exists in the models array
-#     for model in brand_document.get("models", []):
-#         if model["modelName"].lower() == modelName.lower():
-#             raise HTTPException(status_code=400, detail=f"Model '{modelName}' already exists.")
+    # Step 2: Check if model already exists in the models array
+    for model in brand_document.get("models", []):
+        if model["modelName"].lower() == modelName.lower():
+            raise HTTPException(status_code=400, detail=f"Model '{modelName}' already exists.")
 
-#     # Step 3: Convert images to base64 and ensure they are under 2MB and are PNG/JPEG
-#     base64_images = []
-#     for image in images:
-#         if image.content_type not in ["image/png", "image/jpeg"]:
-#             raise HTTPException(status_code=400, detail="Images must be PNG or JPEG format.")
+    # Step 3: Convert images to base64 and ensure they are under 2MB and are PNG/JPEG
+    base64_images = []
+    for image in images:
+        if image.content_type not in ["image/png", "image/jpeg"]:
+            raise HTTPException(status_code=400, detail="Images must be PNG or JPEG format.")
 
-#         contents = await image.read()  # Read image contents
-#         if len(contents) > 2 * 1024 * 1024:  # Check if image is larger than 2MB
-#             raise HTTPException(status_code=400, detail="Each image must be under 2MB.")
+        contents = await image.read()  # Read image contents
+        if len(contents) > 2 * 1024 * 1024:  # Check if image is larger than 2MB
+            raise HTTPException(status_code=400, detail="Each image must be under 2MB.")
 
-#         # Convert image to base64 string
-#         base64_image = base64.b64encode(contents).decode("utf-8")
-#         base64_images.append(base64_image)
+        # Convert image to base64 string
+        base64_image = base64.b64encode(contents).decode("utf-8")
+        base64_images.append(base64_image)
 
-#     # Step 4: Create the new model object
-#     new_model = {
-#         "modelName": modelName,
-#         "vehicleType": vehicleType,
-#         "engineType": engineType,
-#         "description": description,
-#         "torque": torque,
-#         "year": year,
-#         "launchPrice": launchPrice,
-#         "horsepower": horsepower,
-#         "seatingCapacity": seatingCapacity,
-#         "variants": variants,  # Variants are now a list
-#         "colors": colors,      # Colors are now a list
-#         "images": base64_images,  # Store the base64 images
-#         "comments": [],  # Initialize comments as an empty array
-#     }
+    # Step 4: Create the new model object
+    new_model = {
+        "modelName": modelName,
+        "vehicleType": vehicleType,
+        "engineType": engineType,
+        "description": description,
+        "torque": torque,
+        "year": year,
+        "launchPrice": launchPrice,
+        "horsepower": horsepower,
+        "seatingCapacity": seatingCapacity,
+        "variants": variants,  # Variants are now a list
+        "colors": colors,      # Colors are now a list
+        "images": base64_images,  # Store the base64 images
+        "comments": [],  # Initialize comments as an empty array
+    }
 
-#     # Step 5: Add the new model to the models array of the brand document
-#     result = await Vehiclecollection.update_one(
-#         {"brandName": brand_name},
-#         {"$push": {"models": new_model}},
-#     )
-#     if result.modified_count == 1:
-#         return {"message": "Model added successfully"}
-#     else:
-#         raise HTTPException(status_code=500, detail="Failed to add model. Please try again.")
+    # Step 5: Add the new model to the models array of the brand document
+    result = await Vehiclecollection.update_one(
+        {"brandName": brand_name},
+        {"$push": {"models": new_model}},
+    )
+    if result.modified_count == 1:
+        return {"message": "Model added successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to add model. Please try again.")
 
 
 
