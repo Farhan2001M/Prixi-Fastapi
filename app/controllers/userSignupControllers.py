@@ -33,16 +33,6 @@ logger = logging.getLogger(__name__)
 
 
 
-
-
-
-
-
-
-
-
-
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -77,29 +67,6 @@ async def get_user_by_email(email: str) -> Optional[dict]:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def serialize_dict(document):
     # Convert MongoDB document to a serializable dictionary, excluding the password.
     if document is None:
@@ -131,31 +98,6 @@ async def verify_user(email: str, password: str):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": email}, expires_delta=access_token_expires)
     return {"token": access_token, "user": serialize_dict(user)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 async def create_user(user_data: User):
