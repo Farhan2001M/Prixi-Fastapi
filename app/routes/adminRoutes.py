@@ -1,6 +1,6 @@
 from ..models.adminmodel import LoginResponse , ForgotPasswordRequest , ValidateOTPRequest , PasswordChangeRequest , DeleteModelRequest , Brand , VehicleModel , BrandModel 
 from ..controllers.adminControllers import get_current_user, verify_admin
-from ..config.admindatabase import adminlogininfo , VehicleData , Vehiclecollection
+from ..config.admindatabase import adminlogininfo , VehicleData , Vehiclecollection , get_database
 
 import logging
 import bcrypt
@@ -25,6 +25,34 @@ async def home():
 
 logging.basicConfig(level=logging.DEBUG)
 
+
+@router.get("/getBrandData/{brand_name}", response_model=Optional[BrandModel])
+async def get_vehicle_brand(brand_name: str):
+    logging.debug(f"Request received for brand: {brand_name}")
+    
+    db = await get_database()  # Fetch the database connection
+    
+    try:
+        # Fetch brand data from the database
+        brand_data = await db.VehiclesData.find_one({"brandName": brand_name})
+        logging.debug(f"Fetched brand data: {brand_data}")
+        
+        if brand_data is None:
+            logging.warning(f"Brand {brand_name} not found in the database.")
+            raise HTTPException(status_code=404, detail="Brand not found")
+        
+        brand_data["_id"] = str(brand_data["_id"])
+        
+        if "models" not in brand_data:
+            brand_data["models"] = []
+        
+        logging.debug(f"Returning brand data for {brand_name}.")
+        return brand_data
+    
+    except Exception as e:
+        logging.error(f"Error fetching brand data for {brand_name}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    
 
 @router.post("/adminlogin", response_model=LoginResponse, tags=["Admin"])
 async def login_admin(email: str, password: str):
@@ -187,21 +215,6 @@ async def get_vehicles():
     return [serialize_vehicle(vehicle) for vehicle in vehicles]
 
 
-@router.get("/getBrandData/{brand_name}", response_model=Optional[BrandModel])
-async def get_vehicle_brand(brand_name: str):
-    logging.debug(f"Request received for brand: {brand_name}")
-    try:
-        brand_data = await Vehiclecollection.find_one({"brandName": brand_name})
-        logging.debug(f"Fetched brand data: {brand_data}")
-        if brand_data is None:
-            raise HTTPException(status_code=404, detail="Brand not found")
-        brand_data["_id"] = str(brand_data["_id"])
-        if "models" not in brand_data:
-            brand_data["models"] = []
-        return brand_data
-    except Exception as e:
-        logging.error(f"Error fetching brand data: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 @router.delete("/delete-brand-model")
