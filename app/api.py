@@ -1,6 +1,6 @@
 from fastapi import FastAPI 
 from fastapi.middleware.cors import CORSMiddleware
-from .routes.adminRoutes import router as admin_router
+from .routes.adminRoutes import router as admin_routes
 
 app = FastAPI()
 
@@ -18,4 +18,4 @@ app.add_middleware(
 async def healthCheck():
   return "The health check is successful"
 
-app.include_router(admin_router)
+app.include_router(admin_routes)

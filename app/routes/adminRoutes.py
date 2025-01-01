@@ -1,17 +1,19 @@
-from ..models.adminmodel import Brand , BrandModel 
-from ..config.admindatabase import Vehiclecollection
-
+import motor.motor_asyncio
 from fastapi import APIRouter, HTTPException
-from typing import List, Dict, Any , Optional
+from typing import List, Dict, Any 
+from pydantic import BaseModel
 
+# Use your connection string from MongoDB Atlas
+client = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://chfarhanilyas550:farhan123@farhan0.k7f9z.mongodb.net/Prixi?retryWrites=true&w=majority')
+# Access the 'Prixi' database
+DB = client.PrixiDB
+#Vehicles collection
+Vehiclecollection = DB.VehiclesData
 
-from fastapi import APIRouter
 router = APIRouter()
 
-
-@router.get('/')
-async def home():
-    return {'msg': 'Welcome in my Admin Routes '} 
+class Brand(BaseModel):
+    brandName: str
 
 @router.post("/addvehiclebrand")
 async def add_vehicle_brand(brand: Brand):
@@ -40,15 +42,3 @@ async def get_vehicles():
     vehicles_cursor = Vehiclecollection.find()  # Get a cursor for all documents
     vehicles = await vehicles_cursor.to_list(length=None)  # Fetch all documents into a list
     return [serialize_vehicle(vehicle) for vehicle in vehicles]
-
-@router.get("/getBrandData/{brand_name}", response_model=Optional[BrandModel])
-async def get_vehicle_brand(brand_name: str):
-    brand_data = await Vehiclecollection.find_one({"brandName": brand_name})
-    if brand_data is None:
-        raise HTTPException(status_code=404, detail="Brand not found")
-    # Convert ObjectId to string for JSON serialization
-    brand_data["_id"] = str(brand_data["_id"])
-    # Ensure models is a valid list
-    if "models" not in brand_data:
-        brand_data["models"] = []
-    return brand_data
