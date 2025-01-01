@@ -26,14 +26,14 @@ app.add_middleware(
 
 
 
+@app.get("/")
+async def healthCheck():
+  return "The health check is successful"
+
+
 app.include_router(admin_router)
 app.include_router(signup_router)
 app.include_router(vehicle_router)
 app.include_router(recommendation)
 app.include_router(prediction)
 
-
-
-@app.get("/")
-async def healthCheck():
-  return "The helath check is successful"

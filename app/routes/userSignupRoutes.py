@@ -24,7 +24,7 @@ router = APIRouter()
 
 
 @router.get('/')
-async def home():
+async def Welcome():
     return {'msg': 'Welcome in my Signup Routes '} 
 
 
