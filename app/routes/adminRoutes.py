@@ -1,7 +1,7 @@
 from ..models.adminmodel import LoginResponse , ForgotPasswordRequest , ValidateOTPRequest , PasswordChangeRequest , DeleteModelRequest , Brand , VehicleModel , BrandModel 
 from ..controllers.adminControllers import get_current_user
 # from ..controllers.adminControllers import get_current_user , verify_admin
-from ..config.admindatabase import get_database
+from ..config.admindatabase import get_collections
 
 import logging
 import bcrypt
@@ -27,31 +27,33 @@ async def home():
 logging.basicConfig(level=logging.DEBUG)
 
 
-@router.get("/getBrandData/{brand_name}", response_model=Optional[BrandModel])
+@router.get('/getBrandData/{brand_name}')
 async def get_vehicle_brand(brand_name: str):
+    # Log the incoming request
     logging.debug(f"Request received for brand: {brand_name}")
-    
-    db = await get_database()  # Fetch the database connection
-    
+
     try:
-        # Fetch brand data from the database
-        brand_data = await db.VehiclesData.find_one({"brandName": brand_name})
-        logging.debug(f"Fetched brand data: {brand_data}")
+        # Get collections from database
+        adminlogininfo, Vehiclecollection = await get_collections()
+
+        # Log the start of the query
+        logging.debug(f"Querying for brand: {brand_name} in Vehiclecollection...")
+
+        # Query the brand from the Vehiclecollection
+        brand_data = await Vehiclecollection.find_one({"brandName": brand_name})
         
+        # Log the result or lack of result
         if brand_data is None:
-            logging.warning(f"Brand {brand_name} not found in the database.")
+            logging.error(f"No data found for brand: {brand_name}")
             raise HTTPException(status_code=404, detail="Brand not found")
-        
-        brand_data["_id"] = str(brand_data["_id"])
-        
-        if "models" not in brand_data:
-            brand_data["models"] = []
-        
-        logging.debug(f"Returning brand data for {brand_name}.")
+
+        # If brand data is found, log the fetched data
+        logging.debug(f"Fetched brand data: {brand_data}")
+
         return brand_data
-    
+
     except Exception as e:
-        logging.error(f"Error fetching brand data for {brand_name}: {str(e)}")
+        logging.error(f"Error occurred while fetching brand data for {brand_name}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
     
 
