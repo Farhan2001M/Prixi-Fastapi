@@ -4,7 +4,7 @@ from ..config.usersdatabase import signupcollectioninfo
 from ..config.VehicleDatabase import collection 
 from typing import List, Dict, Any
 from fastapi import Depends
-# from ..config.admindatabase import Vehiclecollection
+from ..config.admindatabase import Vehiclecollection
 from ..controllers.userSignupControllers import get_current_user  
 
 
@@ -148,60 +148,60 @@ def calculate_behavior_score(vehicle_info: Dict, user_stats: Dict) -> float:
 
 
 
-# # Route to get vehicle recommendations based on user behavior (click history)
-# @router.get("/recommendationsbybehavior", response_model=List[Dict[str, Any]], tags=["Recommendation"])
-# async def get_recommended_vehicles_based_on_behavior(current_user: str = Depends(get_current_user)):
-#     try:
-#         # Fetch user and statistics
-#         user = await signupcollectioninfo.find_one({"email": current_user})
-#         if not user or "statistics" not in user:
-#             raise HTTPException(status_code=404, detail="User not found or no statistics found")
+# Route to get vehicle recommendations based on user behavior (click history)
+@router.get("/recommendationsbybehavior", response_model=List[Dict[str, Any]], tags=["Recommendation"])
+async def get_recommended_vehicles_based_on_behavior(current_user: str = Depends(get_current_user)):
+    try:
+        # Fetch user and statistics
+        user = await signupcollectioninfo.find_one({"email": current_user})
+        if not user or "statistics" not in user:
+            raise HTTPException(status_code=404, detail="User not found or no statistics found")
 
-#         user_stats = user["statistics"]
-#         logger.info(f"User found: {user['email']} with statistics data.")
+        user_stats = user["statistics"]
+        logger.info(f"User found: {user['email']} with statistics data.")
 
-#         # Fetch all vehicles and calculate behavior-based scores
-#         vehicles_cursor = Vehiclecollection.find()
-#         all_vehicles = await vehicles_cursor.to_list(length=None)
+        # Fetch all vehicles and calculate behavior-based scores
+        vehicles_cursor = Vehiclecollection.find()
+        all_vehicles = await vehicles_cursor.to_list(length=None)
 
-#         vehicle_scores = []
+        vehicle_scores = []
 
-#         for vehicle in all_vehicles:
-#             for model in vehicle["models"]:
-#                 # Check if the required fields exist
-#                 if "launchPrice" in model and "vehicleType" in model and "engineType" in model:
-#                     behavior_score = calculate_behavior_score(model, user_stats)
-#                     vehicle_scores.append({
-#                         "brandName": vehicle.get("brandName", "Unknown Brand"),
-#                         "modelName": model.get("modelName", "Unknown Model"),
-#                         "launchPrice": model.get("launchPrice", 0),
-#                         "horsepower": model.get("horsepower", 0),
-#                         "torque": model.get("torque", 0),
-#                         "images": model.get("images", []),
-#                         "vehicleType": model.get("vehicleType", "Unknown Type"),
-#                         "engineType": model.get("engineType", "Unknown Engine"),
-#                         "finalScore": behavior_score,
-#                     })
+        for vehicle in all_vehicles:
+            for model in vehicle["models"]:
+                # Check if the required fields exist
+                if "launchPrice" in model and "vehicleType" in model and "engineType" in model:
+                    behavior_score = calculate_behavior_score(model, user_stats)
+                    vehicle_scores.append({
+                        "brandName": vehicle.get("brandName", "Unknown Brand"),
+                        "modelName": model.get("modelName", "Unknown Model"),
+                        "launchPrice": model.get("launchPrice", 0),
+                        "horsepower": model.get("horsepower", 0),
+                        "torque": model.get("torque", 0),
+                        "images": model.get("images", []),
+                        "vehicleType": model.get("vehicleType", "Unknown Type"),
+                        "engineType": model.get("engineType", "Unknown Engine"),
+                        "finalScore": behavior_score,
+                    })
 
-#                     # Print final score of each vehicle
-#                     print(f"Model: {model.get('modelName', 'Unknown Model')} | Final Score: {behavior_score}")
+                    # Print final score of each vehicle
+                    print(f"Model: {model.get('modelName', 'Unknown Model')} | Final Score: {behavior_score}")
 
-#         # Sort vehicles by final score (highest first)
-#         vehicle_scores.sort(key=lambda x: x["finalScore"], reverse=True)
+        # Sort vehicles by final score (highest first)
+        vehicle_scores.sort(key=lambda x: x["finalScore"], reverse=True)
 
-#         # Select top 3 recommendations
-#         recommended_vehicles = vehicle_scores[:3]
+        # Select top 3 recommendations
+        recommended_vehicles = vehicle_scores[:3]
 
-#         for recommendation in recommended_vehicles:
-#             logger.info(f"Recommended Vehicle: {recommendation['brandName']} {recommendation['modelName']}, "
-#                         f"Score: {recommendation['finalScore']}")
+        for recommendation in recommended_vehicles:
+            logger.info(f"Recommended Vehicle: {recommendation['brandName']} {recommendation['modelName']}, "
+                        f"Score: {recommendation['finalScore']}")
 
-#         return recommended_vehicles
+        return recommended_vehicles
 
-#     except Exception as e:
-#         error_message = f"An error occurred: {str(e)}"
-#         logger.error(error_message)
-#         raise HTTPException(status_code=500, detail=error_message)
+    except Exception as e:
+        error_message = f"An error occurred: {str(e)}"
+        logger.error(error_message)
+        raise HTTPException(status_code=500, detail=error_message)
 
 
 
