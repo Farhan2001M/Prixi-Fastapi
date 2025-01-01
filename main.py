@@ -1,8 +1,5 @@
-
 import uvicorn
-
-PORT = 8000
-HOST = '127.0.0.1'
+from app.api import app  # Import the FastAPI app from app.api
 
 if __name__ == '__main__':
-    uvicorn.run('app.api:app', host = HOST, port = PORT, reload = True)
+    uvicorn.run(app, host='127.0.0.1', port=8000, reload=True)

@@ -17,12 +17,15 @@ class Brand(BaseModel):
 
 @router.post("/addvehiclebrand")
 async def add_vehicle_brand(brand: Brand):
-    existing_brand = await Vehiclecollection.find_one({"brandName": brand.brandName})
-    if existing_brand:
-        raise HTTPException(status_code=400, detail="Brand already exists.")
-    new_brand = {"brandName": brand.brandName,  "models": [] }
-    await Vehiclecollection.insert_one(new_brand)
-    return {"message": "Brand added successfully."}
+    try:
+        existing_brand = await Vehiclecollection.find_one({"brandName": brand.brandName})
+        if existing_brand:
+            raise HTTPException(status_code=400, detail="Brand already exists.")
+        new_brand = {"brandName": brand.brandName, "models": []}
+        await Vehiclecollection.insert_one(new_brand)
+        return {"message": "Brand added successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error adding brand: {str(e)}")
 
 @router.get("/get-car-brands")
 async def get_car_brands():
