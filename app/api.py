@@ -24,13 +24,12 @@ app.add_middleware(
     allow_headers = ["*"],
 )
 
+@app.get("/")
+async def healthCheck():
+  return "The health check is successful"
+
 app.include_router(admin_router)
 app.include_router(signup_router)
 app.include_router(vehicle_router)
 app.include_router(recommendation)
 app.include_router(prediction)
-
-
-@app.get("/")
-async def healthCheck():
-  return "The haalth check is successful"
