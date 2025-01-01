@@ -1,5 +1,6 @@
 from ..models.adminmodel import LoginResponse , ForgotPasswordRequest , ValidateOTPRequest , PasswordChangeRequest , DeleteModelRequest , Brand , VehicleModel , BrandModel 
-from ..controllers.adminControllers import get_current_user, verify_admin
+from ..controllers.adminControllers import get_current_user
+# from ..controllers.adminControllers import get_current_user , verify_admin
 from ..config.admindatabase import get_database
 
 import logging
@@ -54,15 +55,15 @@ async def get_vehicle_brand(brand_name: str):
         raise HTTPException(status_code=500, detail="Internal Server Error")
     
 
-@router.post("/adminlogin", response_model=LoginResponse, tags=["Admin"])
-async def login_admin(email: str, password: str):
-    result = await verify_admin(email, password)    
-    # Handle the different failure cases by raising HTTP exceptions
-    if result == "email_not_registered":
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email not registered.")
-    if result == "invalid_password":
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password.")
-    return result    
+# @router.post("/adminlogin", response_model=LoginResponse, tags=["Admin"])
+# async def login_admin(email: str, password: str):
+#     result = await verify_admin(email, password)    
+#     # Handle the different failure cases by raising HTTP exceptions
+#     if result == "email_not_registered":
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email not registered.")
+#     if result == "invalid_password":
+#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password.")
+#     return result    
 
 
 # @router.post("/admin-forgot-password", tags=["Admin"])
