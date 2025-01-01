@@ -1,6 +1,6 @@
 import bcrypt
 from bson import ObjectId
-from ..config.admindatabase import adminlogininfo
+# from ..config.admindatabase import adminlogininfo
 # from ..models.adminmodel import User 
 from datetime import datetime, timedelta
 from typing import Optional
@@ -91,16 +91,16 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-async def verify_admin(email: str, password: str):
-    user = await adminlogininfo.find_one({"email": email})
-    if user is None:
-        return "email_not_registered"
-    if not bcrypt.checkpw(password.encode('utf-8'), user['password']):
-        return "invalid_password"
-    # Create a token and return it
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": email}, expires_delta=access_token_expires)
-    return {"token": access_token, "user": serialize_dict(user)}
+# async def verify_admin(email: str, password: str):
+#     user = await adminlogininfo.find_one({"email": email})
+#     if user is None:
+#         return "email_not_registered"
+#     if not bcrypt.checkpw(password.encode('utf-8'), user['password']):
+#         return "invalid_password"
+#     # Create a token and return it
+#     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = create_access_token(data={"sub": email}, expires_delta=access_token_expires)
+#     return {"token": access_token, "user": serialize_dict(user)}
 
 
 
