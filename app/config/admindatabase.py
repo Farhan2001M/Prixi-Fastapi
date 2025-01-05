@@ -1,17 +1,21 @@
 import motor.motor_asyncio
+import os
+from dotenv import load_dotenv
 
-# Use your connection string from MongoDB Atlas
-client = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://chfarhanilyas550:farhan123@farhan0.k7f9z.mongodb.net/Prixi?retryWrites=true&w=majority')
-# client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
+# Load environment variables from the .env file
+load_dotenv()
+
+# MongoDB Driver - use the URI from the environment variable
+client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGO_URI"))
 
 # Access the 'Prixi' database
-usersDB = client.PrixiDB
+DB = client.PrixiDB
 
 # Access the 'AdminInfo' collection
-adminlogininfo = usersDB.AdminInfo
+adminlogininfo = DB.AdminInfo
 
 #Vehicles collection
-Vehiclecollection = usersDB.VehiclesData
+Vehiclecollection = DB.VehiclesData
 
 # For 2nd module 
-VehicleData = usersDB.VehicleData
+VehicleData = DB.VehicleData

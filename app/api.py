@@ -33,4 +33,4 @@ app.include_router(prediction)
 
 @app.get("/")
 async def healthCheck():
-  return "The haalth check is successful"
+  return "The health check is successful"

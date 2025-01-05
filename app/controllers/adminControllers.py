@@ -9,10 +9,16 @@ from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 import logging
+import os
+from dotenv import load_dotenv
 
-SECRET_KEY = "Extremely9Sensitive9Super5Secret6Key3"  
-ALGORITHM = "HS256" 
-ACCESS_TOKEN_EXPIRE_MINUTES = 100
+# Load environment variables from .env file
+load_dotenv()
+
+# Accessing the environment variables
+SECRET_KEY = os.getenv("SECRET_KEY", "MY-Default")  # Provide a default if not found
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))  # Default is 100 minutes
 
 
 # Set up logging
