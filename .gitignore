@@ -1,1 +1,7 @@
-.vercel
+# Ignore virtual environment folder
+venv/
+# Ignore Python bytecode files
+__pycache__/
+# Ignore specific files or folders
+folder_structure.py
+
