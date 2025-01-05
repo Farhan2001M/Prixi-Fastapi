@@ -5,3 +5,5 @@ __pycache__/
 # Ignore specific files or folders
 folder_structure.py
 
+# Ignore the .env file
+.env
