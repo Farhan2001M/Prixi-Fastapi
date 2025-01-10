@@ -14,7 +14,7 @@ from ..controllers.userSignupControllers import get_current_user
 # from sklearn.metrics.pairwise import cosine_similarity
 # from collections import Counter
 # import numpy as np
-# # from sklearn.preprocessing import MinMaxScaler
+# from sklearn.preprocessing import MinMaxScaler
 # from gensim.models import Word2Vec
 
 
