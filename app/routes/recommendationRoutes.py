@@ -455,35 +455,6 @@ async def get_recommended_vehicles_based_on_behavior(current_user: str = Depends
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # # Set Gensim's logger to only show WARNING level logs and higher
 # logging.getLogger('gensim').setLevel(logging.WARNING)
 

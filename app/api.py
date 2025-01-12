@@ -40,7 +40,7 @@ app.include_router(prediction)
 # Health check route
 @app.get("/")
 async def healthCheck():
-    return "The health check is successful"
+    return "Most health checks are successful"
 
 # The main entry point for the application
 if __name__ == "__main__":
