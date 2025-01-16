@@ -163,8 +163,8 @@ async def forgot_password(request: ForgotPasswordRequest):
     # Email configuration
     smtp_server = 'smtp.gmail.com'
     smtp_port = 587
-    from_email = 'harfzaar360@gmail.com'
-    from_password = "wifv tnzs udbo xwkx"  # Use environment variable for the password
+    from_email = 'prixihelpcentre@gmail.com'
+    from_password = "jgtn fvsj ymuc wzje"  # Use environment variable for the password
 
     # Send OTP via email
     try:
@@ -286,6 +286,7 @@ async def remove_image(current_user: str = Depends(get_current_user)):
 
     # from_email = 'prixihelpcentre@gmail.com'
     # from_password = "jgtn fvsj ymuc wzje"  # Use environment variable for the password
+
     # from_email = 'prixihelpcentre@gmail.com'
     # from_password = "jgtn fvsj ymuc wzje"  # Use environment variable for the password
 
