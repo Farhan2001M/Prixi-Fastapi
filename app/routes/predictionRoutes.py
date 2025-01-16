@@ -24,9 +24,7 @@ class CarInput(BaseModel):
     miles: int
     trim: str
 
-
-
-@router.post("/pricepredict", tags=["Price prediction"])
+@router.post("/pricepredict", tags=["Pricing"])
 async def predict_price(input_data: CarInput, current_user: str = Depends(get_current_user)):
     # Check if the user is authenticated
     if not current_user:
@@ -78,14 +76,6 @@ async def predict_price(input_data: CarInput, current_user: str = Depends(get_cu
 
 
 
-
-
-
-
-
-
-
-
 # # Your route for price prediction
 # @router.post("/pricepredict", tags=["Price prediction"])
 # async def predict_price(input_data: CarInput, current_user: str = Depends(get_current_user)):
@@ -131,17 +121,12 @@ async def predict_price(input_data: CarInput, current_user: str = Depends(get_cu
 
 
 
-
-
-
-
-
 class TaxData(BaseModel):
     taxAmount: float
     state: str
     timestamp: str
 
-@router.post("/savetax", tags=["Tax Calculation"])
+@router.post("/savetax", tags=["Pricing"])
 async def save_calculated_tax(tax_data: TaxData, current_user: str = Depends(get_current_user)):
     if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized") 
@@ -180,7 +165,7 @@ class LoanData(BaseModel):
     totalCost: float
     timestamp: str
 
-@router.post("/saveloan", tags=["Loan Calculation"])
+@router.post("/saveloan", tags=["Pricing"])
 async def save_calculated_loan(loan_data: LoanData, current_user: str = Depends(get_current_user)):
     if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
